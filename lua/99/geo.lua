@@ -63,7 +63,8 @@ function Point:from_cursor()
         col = 0,
     }, self)
 
-    local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local cursor_row, cursor_col = cursor[1], cursor[2]
     point.row = cursor_row
     point.col = cursor_col + 1
     return point
