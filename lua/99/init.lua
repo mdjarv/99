@@ -69,6 +69,14 @@ function _99_State:add_active_request(clean_up)
     return _active_request_id
 end
 
+function _99_State:active_request_count()
+    local count = 0
+    for _ in pairs(self.__active_requests) do
+        count = count + 1
+    end
+    return count
+end
+
 ---@param id number
 function _99_State:remove_active_request(id)
     local r = self.__active_requests[id]

@@ -35,8 +35,12 @@ local cases = {
 describe("fill_in_function", function()
     for _, case in ipairs(cases) do
         it(case[1], function()
+            local state = _99.__get_state()
             local p, buffer = setup(case[2])
+
             _99.fill_in_function()
+
+            eq(1, state:active_request_count())
             eq(case[2], r(buffer))
 
             p:resolve("success", "function foo()\n    return 42\nend")
@@ -50,6 +54,7 @@ describe("fill_in_function", function()
                 "",
             }
             eq(expected_state, r(buffer))
+            eq(0, state:active_request_count())
         end)
     end
 

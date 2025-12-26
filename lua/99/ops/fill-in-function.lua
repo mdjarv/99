@@ -23,7 +23,6 @@ local function update_file_with_changes(res, location)
     local ts = editor.treesitter
     local func = ts.containing_function(buffer, func_start)
 
-    mark:delete()
     if not func then
         Logger:error(
             "update_file_with_changes: unable to find function at mark location"
@@ -74,11 +73,14 @@ local function fill_in_function(_99)
     )
     request_status:start()
 
-    _99:add_active_request(function()
+    local active_request = -1
+    local function clean_up()
         location:clear_marks()
         request:cancel()
         request_status:stop()
-    end)
+        _99:remove_active_request(active_request)
+    end
+    active_request = _99:add_active_request(clean_up)
 
     request:start({
         on_stdout = function(line)
@@ -86,10 +88,6 @@ local function fill_in_function(_99)
         end,
         on_complete = function(status, response)
             request_status:stop()
-            if request:is_cancelled() then
-                return
-            end
-
             if status == "failed" then
                 if _99.display_errors then
                     Window.display_error(
@@ -103,15 +101,17 @@ local function fill_in_function(_99)
                 Logger:error(
                     "unable to fill in function, enable and check logger for more details"
                 )
-                return
             elseif status == "cancelled" then
+                Logger:debug("fill_in_function was cancelled")
                 -- TODO: small status window here
-                return
+            elseif status == "success" then
+                update_file_with_changes(response, location)
             end
-
-            update_file_with_changes(response, location)
+            clean_up()
         end,
-        on_stderr = function(line) end,
+        on_stderr = function(line)
+            Logger:debug("fill_in_function#on_stderr", "line", line)
+        end,
     })
 end
 
