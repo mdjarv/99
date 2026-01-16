@@ -24,11 +24,11 @@ end
 --- @param opts _99.ops.Opts?
 --- @return _99.ops.Opts
 local function process_opts(opts)
-    opts = opts or {}
-    for i, rule in ipairs(opts.additional_rules or {}) do
-        opts.additional_rules[i] = expand(rule)
-    end
-    return opts
+  opts = opts or {}
+  for i, rule in ipairs(opts.additional_rules or {}) do
+    opts.additional_rules[i] = expand(rule)
+  end
+  return opts
 end
 
 --- @alias _99.Cleanup fun(): nil
@@ -191,7 +191,9 @@ end
 
 --- @param path string
 function _99:rule_from_path(path)
-  return Agents.get_rule_by_path(_99_state.rules, expand(path))
+  _ = self
+  path = expand(path) --[[ @as string]]
+  return Agents.get_rule_by_path(_99_state.rules, path)
 end
 
 --- @param opts? _99.ops.Opts

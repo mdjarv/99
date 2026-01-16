@@ -34,19 +34,19 @@ function CmpSource.new(_99)
   }, CmpSource)
 end
 
-function CmpSource:is_available()
+function CmpSource.is_available()
   return true
 end
 
-function CmpSource:get_debug_name()
+function CmpSource.get_debug_name()
   return SOURCE
 end
 
-function CmpSource:get_keyword_pattern()
+function CmpSource.get_keyword_pattern()
   return [[@\k\+]]
 end
 
-function CmpSource:get_trigger_characters()
+function CmpSource.get_trigger_characters()
   return { "@" }
 end
 
@@ -94,19 +94,19 @@ function CmpSource:complete(params, callback)
 end
 
 --- TODO: Look into what this could be
-function CmpSource:resolve(completion_item, callback)
+function CmpSource.resolve(completion_item, callback)
   callback(completion_item)
 end
 
-function CmpSource:execute(completion_item, callback)
+function CmpSource.execute(completion_item, callback)
   callback(completion_item)
 end
 
 --- @type CmpSource | nil
 local source = nil
 
---- @param _99 _99.State
-local function init_for_buffer(_99)
+--- @param _ _99.State
+local function init_for_buffer(_)
   local cmp = require("cmp")
   cmp.setup.buffer({
     sources = {
