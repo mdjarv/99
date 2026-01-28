@@ -1,4 +1,5 @@
 local cmp = require("99.extensions.cmp")
+local blink = require("99.extensions.blink")
 
 --- @class _99.Extensions.Source
 --- @field init_for_buffer fun(_99: _99.State): nil
@@ -14,6 +15,8 @@ local function get_source(completion)
   local source = completion.source
   if source == "cmp" then
     return cmp
+  elseif source == "blink" then
+    return blink
   end
 end
 
